@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Crezco.Infrastructure.External.LocationClient;
+using Crezco.Infrastructure.Tests.Extensions;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 

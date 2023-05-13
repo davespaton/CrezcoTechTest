@@ -1,7 +1,7 @@
 ﻿using FakeItEasy;
 using FakeItEasy.Configuration;
 
-namespace Crezco.Infrastructure.Tests;
+namespace Crezco.Infrastructure.Tests.Extensions;
 
 public static class MessageHandlerExtensions
 {

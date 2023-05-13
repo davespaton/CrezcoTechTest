@@ -2,7 +2,7 @@
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 
-namespace Crezco.Infrastructure.Tests;
+namespace Crezco.Infrastructure.Tests.Extensions;
 // ReSharper disable once InconsistentNaming
 public static class ILoggerExtensions
 {

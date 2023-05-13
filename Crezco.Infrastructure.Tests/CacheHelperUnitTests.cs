@@ -1,5 +1,6 @@
 ﻿using Crezco.Infrastructure.Cache;
 using Crezco.Infrastructure.Cache.Helpers;
+using Crezco.Infrastructure.Tests.Extensions;
 using Crezco.Infrastructure.Tests.Mocks;
 using FakeItEasy;
 using Microsoft.Extensions.Caching.Distributed;
