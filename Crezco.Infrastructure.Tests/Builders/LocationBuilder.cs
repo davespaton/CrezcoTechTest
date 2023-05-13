@@ -1,4 +1,4 @@
-﻿using Crezco.Infrastructure.External.LocationApi;
+﻿using Crezco.Infrastructure.External.LocationClient;
 using Crezco.Infrastructure.Persistence;
 
 namespace Crezco.Infrastructure.Tests.Builders;
@@ -23,16 +23,16 @@ public class LocationBuilder
         {
             CreatedAt = DateTime.UtcNow,
             IpAddress = _ipAddress,
-            Data = new LocationApiData()
+            Data = new LocationApiData
             {
-                CityName = _cityName ?? "a",
-                CountryCode = "b",
-                CountryName = "c",
-                Latitude = "d",
-                Longitude = "e",
-                RegionName = "f",
+                CityName = _cityName ?? "London",
+                CountryCode = "GB",
+                CountryName = "United Kingdom",
+                Latitude = 0.12,
+                Longitude = 2.34,
+                RegionName = "England",
                 TimeZone = "g",
-                ZipCode = "h"
+                ZipCode = "ME23"
             }
         };
 }

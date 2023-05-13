@@ -1,4 +1,4 @@
-﻿using Crezco.Infrastructure.External.LocationApi;
+﻿using Crezco.Infrastructure.External.LocationClient;
 using ProtoBuf;
 
 namespace Crezco.Infrastructure.Persistence;
