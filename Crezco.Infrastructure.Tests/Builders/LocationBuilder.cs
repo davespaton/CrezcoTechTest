@@ -7,6 +7,7 @@ public class LocationBuilder
 {
     private readonly string _ipAddress;
     private string? _cityName;
+    private DateTime? _createdAt;
 
     public LocationBuilder(string ipAddress)
     {
@@ -18,10 +19,15 @@ public class LocationBuilder
         _cityName = cityName; return this;
     }
 
+    public LocationBuilder WithCreatedAt(DateTime dateTime)
+    {
+        _createdAt = dateTime; return this;
+    }
+
     public Location Build() =>
         new()
         {
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = _createdAt ?? DateTime.UtcNow,
             IpAddress = _ipAddress,
             Data = new LocationApiData
             {
