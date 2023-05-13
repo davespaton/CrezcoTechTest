@@ -1,6 +1,4 @@
-﻿using ProtoBuf;
-
-namespace Crezco.Infrastructure.Cache;
+﻿namespace Crezco.Infrastructure.Cache.Helpers;
 
 //[ProtoContract(ImplicitFields = ImplicitFields.AllFields)]
 //public class CacheItem

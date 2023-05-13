@@ -1,0 +1,38 @@
+﻿using Crezco.Infrastructure.External.LocationApi;
+using Crezco.Infrastructure.Persistence;
+
+namespace Crezco.Infrastructure.Tests.Builders;
+
+public class LocationBuilder
+{
+    private readonly string _ipAddress;
+    private string? _cityName;
+
+    public LocationBuilder(string ipAddress)
+    {
+        _ipAddress = ipAddress;
+    }
+
+    public LocationBuilder WithCityName(string? cityName)
+    {
+        _cityName = cityName; return this;
+    }
+
+    public Location Build() =>
+        new()
+        {
+            CreatedAt = DateTime.UtcNow,
+            IpAddress = _ipAddress,
+            Data = new LocationApiData()
+            {
+                CityName = _cityName ?? "a",
+                CountryCode = "b",
+                CountryName = "c",
+                Latitude = "d",
+                Longitude = "e",
+                RegionName = "f",
+                TimeZone = "g",
+                ZipCode = "h"
+            }
+        };
+}

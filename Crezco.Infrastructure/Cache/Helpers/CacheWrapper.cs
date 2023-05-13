@@ -1,6 +1,6 @@
 ﻿using ProtoBuf;
 
-namespace Crezco.Infrastructure.Cache;
+namespace Crezco.Infrastructure.Cache.Helpers;
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 internal sealed class CacheWrapper<T> where T : class
@@ -22,7 +22,7 @@ internal sealed class CacheWrapper<T> where T : class
         return memoryStream.ToArray();
     }
 
-    public static CacheWrapper<T> FromByteArray(byte[] data) 
+    public static CacheWrapper<T> FromByteArray(byte[] data)
     {
         using var memoryStream = new MemoryStream(data);
         return Serializer.Deserialize<CacheWrapper<T>>(memoryStream);

@@ -2,16 +2,16 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Crezco.Infrastructure.Cache;
+namespace Crezco.Infrastructure.Cache.Helpers;
 
-internal class CacheHelper<T> : ICacheHelper<T> where T : class
+internal class CacheHelper: ICacheHelper
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<ICacheHelper> _logger;
     private readonly IDistributedCache _distributedCache;
     private readonly IOptions<CacheOptions> _options;
 
     public CacheHelper(
-        ILogger logger,
+        ILogger<ICacheHelper> logger,
         IDistributedCache distributedCache,
         IOptions<CacheOptions> options)
     {
@@ -20,15 +20,15 @@ internal class CacheHelper<T> : ICacheHelper<T> where T : class
         _options = options;
     }
 
-    public async Task<T?> TryGetOrCreateAsync(
+    public async Task<T?> TryGetOrCreateAsync<T>(
         string key,
         Func<Task<T?>> create,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) where T: class
     {
         if (_options.Value.Disabled)
             return await create();
 
-        T? cachedValue = await TryGetCachedValue(key, cancellationToken);
+        T? cachedValue = await TryGetCachedValue<T>(key, cancellationToken);
         if (cachedValue is not null)
             return cachedValue;
 
@@ -41,7 +41,8 @@ internal class CacheHelper<T> : ICacheHelper<T> where T : class
         return value;
     }
 
-    private async Task TrySetCachedValue(string key, CancellationToken cancellationToken, T? value)
+    private async Task TrySetCachedValue<T>(string key, CancellationToken cancellationToken, T? value)
+        where T: class
     {
         try
         {
@@ -54,7 +55,8 @@ internal class CacheHelper<T> : ICacheHelper<T> where T : class
         }
     }
 
-    private async Task<T?> TryGetCachedValue(string key, CancellationToken cancellationToken = default)
+    private async Task<T?> TryGetCachedValue<T>(string key, CancellationToken cancellationToken = default) 
+        where T: class
     {
         try
         {

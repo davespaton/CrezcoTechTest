@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 
-namespace Crezco.Infrastructure.Cache;
+namespace Crezco.Infrastructure.Cache.Helpers;
 internal static class DistributedCacheExtensions
 {
     public static async Task<CacheWrapper<T>?> GetAsync<T>(
-        this IDistributedCache cache, 
+        this IDistributedCache cache,
         string key,
-        CancellationToken cancellationToken = default) where T: class
+        CancellationToken cancellationToken = default) where T : class
     {
         byte[]? data = await cache.GetAsync(key, cancellationToken);
         if (data is null)
@@ -16,8 +16,8 @@ internal static class DistributedCacheExtensions
     }
 
     public static async Task SetAsync<T>(
-        this IDistributedCache cache, 
-        string key, 
+        this IDistributedCache cache,
+        string key,
         CacheWrapper<T> value,
         DistributedCacheEntryOptions options,
         CancellationToken cancellationToken = default) where T : class
