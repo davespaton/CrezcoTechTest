@@ -9,7 +9,7 @@ namespace Crezco.Infrastructure.Persistence;
 public sealed class LocationData
 {
     [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 
     public required string IpAddress { get; init; }
     public required DateTime CreatedAt { get; init; }

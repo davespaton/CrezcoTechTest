@@ -14,7 +14,7 @@ public class LocationDataBuilder
     }
 
     public LocationData Build()
-        => new LocationData()
+        => new()
         {
             IpAddress = _ipAddress,
             CreatedAt = DateTime.UtcNow,

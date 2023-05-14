@@ -6,6 +6,7 @@ using MongoDB.Driver;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
+    // todo this is configured by file
     .WriteTo.Console()
     .CreateLogger();
 
@@ -68,6 +69,7 @@ WebApplication SetupApp(WebApplicationBuilder builder)
         }
 
         app.UseHttpsRedirection();
+
         app.UseResponseCaching();
         app.UseAuthorization();
         app.MapControllers();

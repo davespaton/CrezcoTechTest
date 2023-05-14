@@ -6,6 +6,9 @@ services:
     depends_on:
       - "redis"
       - "mongodb"
+    ports:
+     - "5000:80"
+     - "5001:443"
     build:
       context: .
       dockerfile: Crezco.Api/Dockerfile

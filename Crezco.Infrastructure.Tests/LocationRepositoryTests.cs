@@ -7,11 +7,12 @@ using MongoDB.Driver;
 namespace Crezco.Infrastructure.Tests;
 public class LocationRepositoryTests: IntegrationTests
 {
-    private LocationRepository GetRepository() =>
-        new LocationRepository(GetService<IMongoDatabase>());
+    private LocationRepository GetRepository() => new(GetService<IMongoDatabase>());
 
     private static void AssertResult(LocationData? actual, LocationData expected)
     {
+        Assert.NotNull(actual);
+
         actual.Should().BeEquivalentTo(expected, opt => opt
             .Excluding(x => x.CreatedAt));
         actual.CreatedAt.Should().BeCloseTo(expected.CreatedAt, TimeSpan.FromSeconds(0.001));

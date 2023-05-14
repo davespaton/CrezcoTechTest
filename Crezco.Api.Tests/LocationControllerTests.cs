@@ -9,7 +9,7 @@ namespace Crezco.Api.Tests;
 public class LocationControllerTests
 {
     private readonly ILocationService _locationService = A.Fake<ILocationService>();
-    LocationController GetController() => new LocationController(_locationService);
+    LocationController GetController() => new(_locationService);
 
     private CancellationToken CancellationToken => CancellationToken.None;
 

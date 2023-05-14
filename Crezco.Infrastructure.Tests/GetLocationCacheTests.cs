@@ -44,8 +44,8 @@ public class GetLocationCacheTests: IntegrationTests
             .Build();
 
         // Act
-        LocationData? result = await TryGetOrCreate(ip, firstInsert);
-        result = await TryGetOrCreate(ip, toInsertIfMissing);
+        await TryGetOrCreate(ip, firstInsert);
+        LocationData result = (await TryGetOrCreate(ip, toInsertIfMissing))!;
 
         // Assert
         result.Should().BeEquivalentTo(firstInsert);
