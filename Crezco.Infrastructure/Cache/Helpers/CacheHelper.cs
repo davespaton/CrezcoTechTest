@@ -5,14 +5,14 @@ using StackExchange.Redis;
 
 namespace Crezco.Infrastructure.Cache.Helpers;
 
-internal class CacheHelper: ICacheHelper
+internal sealed class CacheHelper: ICacheHelper
 {
-    private readonly ILogger<ICacheHelper> _logger;
+    private readonly ILogger<CacheHelper> _logger;
     private readonly IDistributedCache _distributedCache;
     private readonly IOptions<CacheOptions> _options;
 
     public CacheHelper(
-        ILogger<ICacheHelper> logger,
+        ILogger<CacheHelper> logger,
         IDistributedCache distributedCache,
         IOptions<CacheOptions> options)
     {

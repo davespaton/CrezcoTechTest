@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace Crezco.Infrastructure.Persistence;
 
-public class MongoContext
+public sealed class MongoContext
 {
     private readonly MongoClient _client;
     private readonly IMongoDatabase _database;

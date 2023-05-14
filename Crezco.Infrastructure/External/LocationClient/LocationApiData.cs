@@ -3,7 +3,7 @@
 namespace Crezco.Infrastructure.External.LocationClient;
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-public class LocationApiData
+public sealed class LocationApiData
 {
     public required double Latitude { get; init; }
     public required double Longitude { get; init; }

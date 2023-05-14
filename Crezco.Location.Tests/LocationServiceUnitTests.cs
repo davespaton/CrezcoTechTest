@@ -18,7 +18,7 @@ public class LocationServiceUnitTests
 
     private readonly MockCache<LocationData> _cache = new();
 
-    private LocationService GetLocation() => new(_locationClient, _locationRepository, _cache, _logger);
+    private LocationService GetLocation() => new(_locationClient, _locationRepository, _cache);
 
     void SetApiResponse(LocationApiData apiData)
         => A.CallTo(() => _locationClient.GetLocationAsync(A<IPAddress>._, A<CancellationToken>._))

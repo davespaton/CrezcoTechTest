@@ -6,7 +6,7 @@ using ProtoBuf;
 namespace Crezco.Infrastructure.Persistence;
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-public class LocationData
+public sealed class LocationData
 {
     [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
     public string Id { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Crezco.Infrastructure.Persistence;
 
-public class DatabaseOptions
+public sealed class DatabaseOptions
 {
     public const string SectionName = "Database";
 

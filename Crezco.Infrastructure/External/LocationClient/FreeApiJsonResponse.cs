@@ -3,7 +3,7 @@
 /// <summary>
 /// Matches the response found at: https://freeipapi.com/
 /// </summary>
-internal class FreeApiJsonResponse 
+internal sealed class FreeApiJsonResponse 
 {
     public required int IPVersion { get; init; }
     public required string IPAddress { get; init; }

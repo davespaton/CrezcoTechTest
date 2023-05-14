@@ -3,7 +3,7 @@ using MongoDB.Driver.Linq;
 
 namespace Crezco.Infrastructure.Persistence.Repositories;
 
-internal class LocationRepository : ILocationRepository
+internal sealed class LocationRepository : ILocationRepository
 {
     private readonly IMongoCollection<LocationData> _collection;
 

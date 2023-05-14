@@ -1,6 +1,6 @@
 ﻿namespace Crezco.Location.Location;
 
-public class GetLocationByIpResponse
+public sealed class GetLocationByIpResponse
 {
     public required double Latitude { get; init; }
     public required double Longitude { get; init; }

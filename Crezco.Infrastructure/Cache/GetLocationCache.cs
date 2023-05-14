@@ -8,7 +8,7 @@ internal sealed class GetLocationCache: ICache<LocationData>
 {
     private readonly ICacheHelper _cacheHelper;
 
-    private string UniqueKey(string key) => $"GetLocationCache_v1_{key}";
+    private static string UniqueKey(string key) => $"GetLocationCache_v1_{key}";
 
     public GetLocationCache(ICacheHelper cacheHelper)
     {

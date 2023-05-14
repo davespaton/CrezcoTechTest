@@ -12,7 +12,7 @@ namespace Crezco.Infrastructure.Tests;
 
 public class CacheHelperUnitTests
 {
-    private readonly ILogger<ICacheHelper> _logger = A.Fake<ILogger<ICacheHelper>>();
+    private readonly ILogger<CacheHelper> _logger = A.Fake<ILogger<CacheHelper>>();
     private readonly IDistributedCache _distributedCache = A.Fake<IDistributedCache>();
 
     private IOptions<CacheOptions> GetOptions(bool disabled = false) =>

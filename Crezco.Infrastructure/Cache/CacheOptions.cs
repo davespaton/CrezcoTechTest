@@ -1,5 +1,5 @@
 ﻿namespace Crezco.Infrastructure.Cache;
-public class CacheOptions
+public sealed class CacheOptions
 {
     public const string SectionName = "Cache";
 
