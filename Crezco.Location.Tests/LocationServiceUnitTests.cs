@@ -2,7 +2,6 @@ using System.Net;
 using Crezco.Infrastructure.External.LocationClient;
 using Crezco.Infrastructure.Persistence;
 using Crezco.Infrastructure.Persistence.Repositories;
-using Crezco.Infrastructure.Tests.Extensions;
 using Crezco.Location.Location;
 using Crezco.Location.Tests.Builders;
 using FakeItEasy;
@@ -18,7 +17,6 @@ public class LocationServiceUnitTests
     private readonly ILogger<ILocationService> _logger = A.Fake<ILogger<ILocationService>>();
 
     private readonly MockCache<LocationData> _cache = new();
-
 
     private LocationService GetLocation() => new(_locationClient, _locationRepository, _cache, _logger);
 
@@ -70,50 +68,6 @@ public class LocationServiceUnitTests
     }
 
     [Fact]
-    public async Task GettingLocation_ErrorPersistingData_LogsException()
-    {
-        // Arrange
-        LocationService locationService = GetLocation();
-        IPAddress ipAddress = IPAddress.Parse("1.1.1.1");
-
-        var apiBuilder = new LocationApiDataBuilder();
-        SetApiResponse(apiBuilder.Build());
-
-        _cache.SetCache(null, false);
-
-        A.CallTo(() => _locationRepository.CreateAsync(A<LocationData>._, A<CancellationToken>._))
-            .Throws<Exception>();
-
-        // Act
-        _ = await locationService.GetLocationByIpAsync(ipAddress);
-
-        // Assert
-        _logger.AssertLog(LogLevel.Error)
-            .MustHaveHappenedOnceExactly();
-    }
-
-    [Fact]
-    public async Task GettingLocation_ErrorGettingLocation_LogsException()
-    {
-        // Arrange
-        var locationClient = A.Fake<ILocationClient>();
-        A.CallTo(() => locationClient.GetLocationAsync(A<IPAddress>._, A<CancellationToken>._))
-            .Throws<Exception>();
-
-        LocationService locationService = new(locationClient, _locationRepository, _cache, _logger);
-        IPAddress ipAddress = IPAddress.Parse("1.1.1.1");
-
-        _cache.SetCache(null, false);
-
-        // Act
-        _ = await locationService.GetLocationByIpAsync(ipAddress);
-
-        // Assert
-        _logger.AssertLog(LogLevel.Error)
-            .MustHaveHappenedOnceExactly();
-    }
-
-    [Fact]
     public async Task GettingLocation_FromCache_MapsLocationToResponse()
     {
         // Arrange
@@ -161,7 +115,6 @@ public class LocationServiceUnitTests
 
         // Assert
         AssertResponse(response, apiResponse);
-
     }
 
     private static void AssertResponse(GetLocationByIpResponse? response, LocationApiData data)

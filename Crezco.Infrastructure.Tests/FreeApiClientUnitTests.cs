@@ -22,7 +22,10 @@ public class FreeApiClientUnitTests
         messageHandler.WhereSendAsync()
             .Throws<HttpRequestException>();
 
-        HttpClient httpClient = new HttpClient(messageHandler);
+        HttpClient httpClient = new HttpClient(messageHandler)
+        {
+            BaseAddress = new Uri("https://freegeoip.app/")
+        };
 
         FreeApiClient client = GetFreeApiClient();
         A.CallTo(() => _clientFactory.CreateClient(FreeApiClient.HttpClientName))

@@ -42,16 +42,8 @@ internal sealed class LocationService : ILocationService
 
     private async Task<LocationData?> GetLocationFromApi(IPAddress ipAddress, CancellationToken cancellationToken = default)
     {
-        LocationApiData? apiResponse = null;
-        try
-        {
-            apiResponse = await _locationClient.GetLocationAsync(ipAddress, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failure to get location for {ip}", ipAddress.ToString());
-        }
-
+        LocationApiData? apiResponse = await _locationClient.GetLocationAsync(ipAddress, cancellationToken);
+        
         if (apiResponse is null)
         {
             return null;
@@ -64,14 +56,7 @@ internal sealed class LocationService : ILocationService
             IpAddress = ipAddress.ToString()
         };
 
-        try
-        {
-            await _locationRepository.CreateAsync(location, cancellationToken);
-        }
-        catch (Exception exception)
-        {
-            _logger.LogError(exception, "Failure to persist location data for {location}", location);
-        }
+        await _locationRepository.CreateAsync(location, cancellationToken);
 
         return location;
     }
