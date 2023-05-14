@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Crezco.Infrastructure.External.LocationClient;
 
+/// <summary>
+/// Http client for https://freeipapi.com/
+/// </summary>
 internal sealed class FreeApiClient : ILocationClient
 {
     private readonly IHttpClientFactory _httpClientFactory;

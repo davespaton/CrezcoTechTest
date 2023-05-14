@@ -32,3 +32,4 @@ Can be executed by running `docker-compose up -d`
 - For ease, most config has been left in `appsettings.json`
   - UserSecrets and Environment variables would be preferred
 - Tests are a partial list that covers most basis, however it is not an exhaustive list
+  - Notably I would like reflection tests to ensure cache items can correctly be serialized by protobuf for caching
