@@ -7,12 +7,12 @@ namespace Crezco.Infrastructure.Tests;
 
 public class GetLocationCacheTests: IntegrationTests
 {
-    public ICache<Location> GetLocationCache() =>
-        GetService<ICache<Location>>();
+    public ICache<LocationData> GetLocationCache() =>
+        GetService<ICache<LocationData>>();
 
-    private async Task<Location?> TryGetOrCreate(string ip, Location toInsertIfMissing)
+    private async Task<LocationData?> TryGetOrCreate(string ip, LocationData toInsertIfMissing)
     {
-        ICache<Location> cache = GetLocationCache();
+        ICache<LocationData> cache = GetLocationCache();
         return await cache.TryGetOrCreateAsync(ip, () => Task.FromResult(toInsertIfMissing)!);
     }
 
@@ -21,11 +21,11 @@ public class GetLocationCacheTests: IntegrationTests
     {
         // Arrange
         string ip = "1.2.3.4";
-        Location toInsertIfMissing = new LocationBuilder(ip)
+        LocationData toInsertIfMissing = new LocationBuilder(ip)
             .Build();
 
         // Act
-        Location? result = await TryGetOrCreate(ip, toInsertIfMissing);
+        LocationData? result = await TryGetOrCreate(ip, toInsertIfMissing);
 
         // Assert
         result.Should().BeEquivalentTo(toInsertIfMissing);
@@ -36,15 +36,15 @@ public class GetLocationCacheTests: IntegrationTests
     {
         // Arrange
         string ip = "1.2.3.4";
-        Location firstInsert = new LocationBuilder(ip)
+        LocationData firstInsert = new LocationBuilder(ip)
             .WithCityName("Tokyo")
             .Build();
-        Location toInsertIfMissing = new LocationBuilder(ip)
+        LocationData toInsertIfMissing = new LocationBuilder(ip)
             .WithCityName("London")
             .Build();
 
         // Act
-        Location? result = await TryGetOrCreate(ip, firstInsert);
+        LocationData? result = await TryGetOrCreate(ip, firstInsert);
         result = await TryGetOrCreate(ip, toInsertIfMissing);
 
         // Assert

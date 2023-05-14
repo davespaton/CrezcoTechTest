@@ -1,9 +1,10 @@
 ﻿using Crezco.Infrastructure.Cache.Helpers;
 using Crezco.Infrastructure.Persistence;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Crezco.Infrastructure.Cache;
 
-internal sealed class GetLocationCache: ICache<Location>
+internal sealed class GetLocationCache: ICache<LocationData>
 {
     private readonly ICacheHelper _cacheHelper;
 
@@ -14,6 +15,12 @@ internal sealed class GetLocationCache: ICache<Location>
         _cacheHelper = cacheHelper;
     }
 
-    public Task<Location?> TryGetOrCreateAsync(string key, Func<Task<Location?>> create, CancellationToken cancellationToken = default) => 
-        _cacheHelper.TryGetOrCreateAsync(UniqueKey(key), create, cancellationToken);
+    public static DistributedCacheEntryOptions DistributedCacheEntryOptions = new()
+    {
+        // todo this should come from a config file
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1)
+    };
+
+    public Task<LocationData?> TryGetOrCreateAsync(string key, Func<Task<LocationData?>> create, CancellationToken cancellationToken = default) => 
+        _cacheHelper.TryGetOrCreateAsync(UniqueKey(key), create, DistributedCacheEntryOptions, cancellationToken);
 }

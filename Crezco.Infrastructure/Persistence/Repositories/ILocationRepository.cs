@@ -2,6 +2,6 @@
 
 public interface ILocationRepository
 {
-    Task<Location?> GetLatestAsync(string ipAddress, CancellationToken cancellationToken = default);
-    Task CreateAsync(Location data, CancellationToken cancellationToken = default);
+    Task<LocationData?> GetLatestAsync(string ipAddress, CancellationToken cancellationToken = default);
+    Task CreateAsync(LocationData data, CancellationToken cancellationToken = default);
 }

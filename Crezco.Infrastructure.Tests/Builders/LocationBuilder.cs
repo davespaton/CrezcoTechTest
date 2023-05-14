@@ -24,7 +24,7 @@ public class LocationBuilder
         _createdAt = dateTime; return this;
     }
 
-    public Location Build() =>
+    public LocationData Build() =>
         new()
         {
             CreatedAt = _createdAt ?? DateTime.UtcNow,

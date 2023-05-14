@@ -7,25 +7,25 @@ namespace Crezco.Infrastructure.Tests;
 
 public abstract class IntegrationTests: IDisposable
 {
-    private readonly ServiceProvider _provider;
+    protected readonly ServiceProvider Provider;
 
     private readonly string _redisInstance = "test_" + Guid.NewGuid();
     private readonly string _mongoDatabaseName = "test_db_" + Guid.NewGuid();
-    private MongoContext _mongoContext;
+    private MongoContext? _mongoContext;
 
     protected IntegrationTests()
     {
         var serviceDescriptors = new ServiceCollection();
         ConfigureServices(serviceDescriptors);
-        _provider = serviceDescriptors.BuildServiceProvider();
+        Provider = serviceDescriptors.BuildServiceProvider();
     }
     
-    protected T GetService<T>() where T : notnull => _provider.GetRequiredService<T>();
+    protected T GetService<T>() where T : notnull => Provider.GetRequiredService<T>();
 
     private void ConfigureServices(IServiceCollection serviceDescriptors)
     {
         serviceDescriptors.AddLogging();
-        serviceDescriptors.BindInfrastructureServices();
+        serviceDescriptors.AddInfrastructureServices();
 
         serviceDescriptors.AddStackExchangeRedisCache(options =>
         {
@@ -33,7 +33,7 @@ public abstract class IntegrationTests: IDisposable
             options.InstanceName = _redisInstance;
         });
 
-        IOptions<DatabaseSettings> options = Options.Create(new DatabaseSettings()
+        IOptions<DatabaseOptions> options = Options.Create(new DatabaseOptions()
         {
             ConnectionString = "mongodb://localhost/27017",
             DatabaseName = _mongoDatabaseName
@@ -48,8 +48,8 @@ public abstract class IntegrationTests: IDisposable
     {
         // todo connect to redis here and delete the _redistInstance
 
-        _mongoContext.Client.DropDatabase(_mongoDatabaseName);
+        _mongoContext?.Client.DropDatabase(_mongoDatabaseName);
 
-        _provider?.Dispose();
+        Provider?.Dispose();
     }
 }

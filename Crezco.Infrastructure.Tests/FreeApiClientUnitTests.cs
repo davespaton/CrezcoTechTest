@@ -20,7 +20,7 @@ public class FreeApiClientUnitTests
         // Arrange
         var messageHandler = A.Fake<HttpMessageHandler>();
         messageHandler.WhereSendAsync()
-            .Throws<Exception>();
+            .Throws<HttpRequestException>();
 
         HttpClient httpClient = new HttpClient(messageHandler);
 

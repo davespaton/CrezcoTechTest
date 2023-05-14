@@ -10,28 +10,28 @@ public class MongoContext
 
     public const string LocationCollectionName = "locations";
 
-    public MongoContext(IOptions<DatabaseSettings> dbOptions)
+    public MongoContext(IOptions<DatabaseOptions> dbOptions)
     {
-        DatabaseSettings settings = dbOptions.Value;
-        _client = new MongoClient(settings.ConnectionString);
-        _database = _client.GetDatabase(settings.DatabaseName);
+        DatabaseOptions options = dbOptions.Value;
+        _client = new MongoClient(options.ConnectionString);
+        _database = _client.GetDatabase(options.DatabaseName);
 
         EnsureIndexesCreated();
     }
 
     private void EnsureIndexesCreated()
     {
-        IMongoCollection<Location>? collection = _database.GetCollection<Location>(LocationCollectionName);
+        IMongoCollection<LocationData>? collection = _database.GetCollection<LocationData>(LocationCollectionName);
 
-        IndexKeysDefinition<Location>? ipKey = Builders<Location>.IndexKeys.Ascending(x => x.IpAddress);
-        IndexKeysDefinition<Location>? createdAtKey = Builders<Location>.IndexKeys.Descending(x => x.CreatedAt);
-        IndexKeysDefinition<Location>? compoundKey = Builders<Location>.IndexKeys.Combine(ipKey, createdAtKey);
+        IndexKeysDefinition<LocationData>? ipKey = Builders<LocationData>.IndexKeys.Ascending(x => x.IpAddress);
+        IndexKeysDefinition<LocationData>? createdAtKey = Builders<LocationData>.IndexKeys.Descending(x => x.CreatedAt);
+        IndexKeysDefinition<LocationData>? compoundKey = Builders<LocationData>.IndexKeys.Combine(ipKey, createdAtKey);
 
         collection.Indexes.CreateManyAsync(new[]
         {
-            new CreateIndexModel<Location>(ipKey),
-            new CreateIndexModel<Location>(createdAtKey),
-            new CreateIndexModel<Location>(compoundKey)
+            new CreateIndexModel<LocationData>(ipKey),
+            new CreateIndexModel<LocationData>(createdAtKey),
+            new CreateIndexModel<LocationData>(compoundKey)
         });
     }
 

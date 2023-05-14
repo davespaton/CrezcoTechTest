@@ -31,7 +31,7 @@ public class FreeApiClient : ILocationClient
             var response = await client.GetFromJsonAsync<FreeApiJsonResponse>($"json/{ip}", cancellationToken);
             return response?.Adapt<LocationApiData>();
         }
-        catch (Exception exception)
+        catch (HttpRequestException exception)
         {
             _logger.LogError(exception, "Failure to get location for {ip}", ip);
             return null;

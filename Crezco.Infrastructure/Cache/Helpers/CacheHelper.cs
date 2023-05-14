@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 namespace Crezco.Infrastructure.Cache.Helpers;
 
@@ -23,6 +24,7 @@ internal class CacheHelper: ICacheHelper
     public async Task<T?> TryGetOrCreateAsync<T>(
         string key,
         Func<Task<T?>> create,
+        DistributedCacheEntryOptions? options = null,
         CancellationToken cancellationToken = default) where T: class
     {
         if (_options.Value.Disabled)
@@ -36,20 +38,20 @@ internal class CacheHelper: ICacheHelper
         if (value is null)
             return null;
 
-        await TrySetCachedValue(key, cancellationToken, value);
+        await TrySetCachedValue(key, value, options, cancellationToken);
 
         return value;
     }
 
-    private async Task TrySetCachedValue<T>(string key, CancellationToken cancellationToken, T? value)
+    private async Task TrySetCachedValue<T>(string key, T? value, DistributedCacheEntryOptions? options = null, CancellationToken cancellationToken = default)
         where T: class
     {
         try
         {
-            var options = new DistributedCacheEntryOptions();
+            options ??= new DistributedCacheEntryOptions();
             await _distributedCache.SetAsync(key, new CacheWrapper<T>(value), options, cancellationToken);
         }
-        catch (Exception ex)
+        catch (RedisException ex)
         {
             _logger.LogError(ex, "Error setting cache for key {key}", key);
         }
@@ -66,7 +68,7 @@ internal class CacheHelper: ICacheHelper
 
             _logger.LogTrace("Cache miss for key: {key}", key);
         }
-        catch (Exception ex)
+        catch (RedisException ex)
         {
             _logger.LogError(ex, "Error getting cache for key {key}", key);
         }

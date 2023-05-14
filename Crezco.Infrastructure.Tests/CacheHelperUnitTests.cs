@@ -6,6 +6,7 @@ using FakeItEasy;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 namespace Crezco.Infrastructure.Tests;
 
@@ -15,7 +16,7 @@ public class CacheHelperUnitTests
     private readonly IDistributedCache _distributedCache = A.Fake<IDistributedCache>();
 
     private IOptions<CacheOptions> GetOptions(bool disabled = false) =>
-        Options.Create(new CacheOptions { Disabled = disabled });
+        Options.Create(new CacheOptions { Disabled = disabled, Configuration = "", InstanceName = "" });
 
     private CacheHelper GetCacheHelper(IOptions<CacheOptions> options) =>
         new(_logger, _distributedCache, options);
@@ -120,7 +121,7 @@ public class CacheHelperUnitTests
         var key = "key";
         var createItem = new MockCacheItem("create");
         A.CallTo(() => _distributedCache.SetAsync(key, A < byte[]>._, A<DistributedCacheEntryOptions>._, A<CancellationToken>._))
-            .Throws(new Exception("Something went wrong!"));
+            .Throws(new RedisConnectionException(ConnectionFailureType.SocketClosed, "Failed to connect"));
 
         // Act
         MockCacheItem? result = await cache.TryGetOrCreateAsync(key, () => Task.FromResult(createItem)!);
@@ -140,7 +141,7 @@ public class CacheHelperUnitTests
         var key = "key";
         var createItem = new MockCacheItem("create");
         A.CallTo(() => _distributedCache.GetAsync(key, A<CancellationToken>._))
-            .Throws(new Exception("Something went wrong!"));
+            .Throws(new RedisConnectionException(ConnectionFailureType.SocketClosed, "Failed to connect"));
 
         // Act
         MockCacheItem? result = await cache.TryGetOrCreateAsync(key, () => Task.FromResult(createItem)!);

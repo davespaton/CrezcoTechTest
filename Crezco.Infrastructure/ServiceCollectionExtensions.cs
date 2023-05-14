@@ -2,6 +2,7 @@
 using Crezco.Infrastructure.Cache.Helpers;
 using Crezco.Infrastructure.External.LocationClient;
 using Crezco.Infrastructure.Persistence;
+using Crezco.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
@@ -28,7 +29,7 @@ public static class ServiceCollectionExtensions
                 // todo Log details about the retry to trace
             });
 
-    public static IServiceCollection BindInfrastructureServices(this IServiceCollection collection)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection collection)
     {
         collection.AddSingleton<ICacheHelper, CacheHelper>();
         collection.AddHttpClient(FreeApiClient.HttpClientName)
@@ -39,10 +40,11 @@ public static class ServiceCollectionExtensions
             .AddPolicyHandler(RetryPolicy);
 
         // this could be some sort of reflection for all caches
-        collection.AddSingleton<ICache<Location>, GetLocationCache>();
+        collection.AddSingleton<ICache<LocationData>, GetLocationCache>();
         collection.AddSingleton<ILocationClient, FreeApiClient>();
-        
 
+        collection.AddScoped<ILocationRepository, LocationRepository>();
+        
         return collection;
     }
 }
