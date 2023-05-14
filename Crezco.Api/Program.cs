@@ -3,48 +3,77 @@ using Crezco.Infrastructure.Persistence;
 using Crezco.Location;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+
+try
 {
-    builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    WebApplicationBuilder builder = SetupBuilder();
+    WebApplication app = SetupApp(builder);
 
-    builder.Services.AddResponseCaching();
-    builder.Services.AddLocationServices();
-
-    IConfigurationRoot config = builder.Configuration
-        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddUserSecrets(typeof(Program).Assembly)
-        .Build();
-    
-    (DatabaseOptions databaseOptions, CacheOptions cacheOptions) = GetConfigs(config);
-
-    builder.Services.AddStackExchangeRedisCache(opt =>
-    {
-        opt.InstanceName = cacheOptions.InstanceName;
-        opt.Configuration = cacheOptions.Configuration;
-    });
-
-    var mongoContext = new MongoContext(Options.Create(databaseOptions));
-    builder.Services.AddSingleton<IMongoDatabase>(_ => mongoContext.Database);
-
+    app.Run();
 }
-var app = builder.Build();
+catch (Exception ex)
 {
-    if (app.Environment.IsDevelopment())
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+
+WebApplicationBuilder SetupBuilder()
+{
+    WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        builder.Host.UseSerilog();
+
+        builder.Services.AddResponseCaching();
+        builder.Services.AddLocationServices();
+
+        IConfigurationRoot config = builder.Configuration
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddUserSecrets(typeof(Program).Assembly)
+            .Build();
+
+        (DatabaseOptions databaseOptions, CacheOptions cacheOptions) = GetConfigs(config);
+
+        builder.Services.AddStackExchangeRedisCache(opt =>
+        {
+            opt.InstanceName = cacheOptions.InstanceName;
+            opt.Configuration = cacheOptions.Configuration;
+        });
+
+        var mongoContext = new MongoContext(Options.Create(databaseOptions));
+        builder.Services.AddSingleton<IMongoDatabase>(_ => mongoContext.Database);
     }
-
-    app.UseHttpsRedirection();
-    app.UseResponseCaching();
-    app.UseAuthorization();
-    app.MapControllers();
+    return builder;
 }
 
-app.Run();
+WebApplication SetupApp(WebApplicationBuilder builder)
+{
+    WebApplication app = builder.Build();
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseResponseCaching();
+        app.UseAuthorization();
+        app.MapControllers();
+    }
+    return app;
+}
 
 (DatabaseOptions databaseOptions, CacheOptions cacheOptions) GetConfigs(IConfigurationRoot config)
 {
